@@ -9,6 +9,6 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 RUN chmod +x entrypoint.sh
 
-EXPOSE 8080
+EXPOSE 8855
 
 CMD ["./entrypoint.sh"]
