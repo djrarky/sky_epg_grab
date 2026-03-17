@@ -29,7 +29,7 @@ def write_xml(root, filename):
 def write_channel_xml(root, channel_details):
     for channel_number, (channel_name, sid) in channel_details.items():
         channel_xml = ET.SubElement(root, 'channel')
-        channel_xml.set('id', sid)
+        channel_xml.set('id', f"{channel_number}.uk")
         ET.SubElement(channel_xml, "display-name").text = channel_name
         ET.SubElement(channel_xml, "display-name").text = channel_number
         icon_uri = f"https://d2n0069hmnqmmx.cloudfront.net/epgdata/1.0/newchanlogos/10000/10000/skychb{sid}.png"
@@ -42,9 +42,9 @@ def get_listings(uri):
 def get_program_image_url(program_id, aspect_ratio="16-9", size="1200"):
     return f"https://images.metadata.sky.com/pd-image/{program_id}/{aspect_ratio}/{size}"
 
-def programs(days_listings, root):
+def programs(days_listings, root, sid_to_channel):
     for schedule in days_listings['schedule']:
-        channel_id = schedule['sid']
+        channel_id = sid_to_channel.get(schedule['sid'], schedule['sid'])
         for program in schedule['events']:
             start_time = time.strftime('%Y%m%d%H%M%S', time.gmtime(program['st']))
             end_time = time.strftime('%Y%m%d%H%M%S', time.gmtime(program['st'] + program['d']))
@@ -68,6 +68,7 @@ def chunks(data, size=10):
         yield {k: data[k] for k in islice(it, size)}
 
 def get_epg_uris(channel_details, root, days):
+    sid_to_channel = {sid: f"{num}.uk" for num, (_, sid) in channel_details.items()}
     for sid_chunk in chunks(channel_details, 10):
         sids = [v[1] for v in sid_chunk.values() if v[1]]
         sid_string = ','.join(sids)
@@ -75,7 +76,7 @@ def get_epg_uris(channel_details, root, days):
             date = (datetime.datetime.now() + datetime.timedelta(days=day_offset)).strftime('%Y%m%d')
             epg_url = f"https://awk.epgsky.com/hawk/linear/schedule/{date}/{sid_string}"
             day_listings = get_listings(epg_url)
-            root = programs(day_listings, root)
+            root = programs(day_listings, root, sid_to_channel)
 
 def get_sky_epg_data(filename, days, region):
     channel_details_uri = f"https://awk.epgsky.com/hawk/linear/services/4101/{region}"
