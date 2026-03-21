@@ -16,22 +16,22 @@ This Docker container fetches Sky TV EPG data for a specified UK region and serv
 docker run -d \
   --name sky_epg_grab \
   -p 8855:8855 \
-  -e REGION=1 \
+  -e REGION=7 \
   -e EPG_DAYS=7 \
-  -e REFRESH_HOURS=6 \
+  -e REFRESH_HOURS=48 \
   --restart unless-stopped \
-  jtee3d/sky_epg_grab:latest
+  ghcr.io/djrarky/m3u-epg-sync:latest
 ```
 ## Docker Compose
 ```yaml
 services:
   sky_epg_grab:
-    image: ghcr.io/djrarky/m3u-epg-sync:latestst
+    image: ghcr.io/djrarky/m3u-epg-sync:latest
     container_name: sky_epg_grab
     ports:
       - "8855:8855"
     environment:
-      REGION: 1          # 1 for London (default), 2 for Essex, 3 for Central Midlands...
+      REGION: 7          # 1 for London (default), 2 for Essex, 3 for Central Midlands...
       EPG_DAYS: 7        # Number of days of guide data to grab (1–7 days) - 7 days is default
       REFRESH_HOURS: 48   # How often to refresh the EPG - 6 hours is the default.
     restart: unless-stopped
