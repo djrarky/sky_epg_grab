@@ -26,14 +26,14 @@ docker run -d \
 ```yaml
 services:
   sky_epg_grab:
-    image: jtee3d/sky_epg_grab:latest
+    image: ghcr.io/djrarky/m3u-epg-sync:latestst
     container_name: sky_epg_grab
     ports:
       - "8855:8855"
     environment:
       REGION: 1          # 1 for London (default), 2 for Essex, 3 for Central Midlands...
       EPG_DAYS: 7        # Number of days of guide data to grab (1–7 days) - 7 days is default
-      REFRESH_HOURS: 6   # How often to refresh the EPG - 6 hours is the default.
+      REFRESH_HOURS: 48   # How often to refresh the EPG - 6 hours is the default.
     restart: unless-stopped
 ```
 ## Environment Variables
@@ -43,16 +43,5 @@ services:
 | EPG_DAYS      | 7       | Number of days of EPG to fetch (1–7) |
 | REFRESH_HOURS | 6       | How often to update the XML (in hours) |
 
-
-## Links
-[Docker Hub: jtee3d/sky_epg_grab](https://hub.docker.com/r/jtee3d/sky_epg_grab)
-
-[GitHub: jtee3d/sky_epg_grab](https://github.com/jtee3d/sky_epg_grab)
-
 ## Credit
-Based on [Plebster/sky_epg_grab](https://github.com/Plebster/sky_epg_grab).
-
-## Support
-If you would like to support this Docker build, please feel free to buy me a coffee!
-
-<a href="https://www.buymeacoffee.com/jtee3d" rel="nofollow noopener"> <img width="210" height="50" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"></a>
+Based on [Plebster/sky_epg_grab](https://github.com/Plebster/sky_epg_grab) & [GitHub: jtee3d/sky_epg_grab](https://github.com/jtee3d/sky_epg_grab)
